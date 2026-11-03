@@ -1,0 +1,13 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# Course PDFs (slides/tutorials) - not in the repo
+*.pdf
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.vscode/
