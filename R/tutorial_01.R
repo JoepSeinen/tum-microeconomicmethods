@@ -74,7 +74,7 @@ print(Inner)
 Outer <- x %*% t(y)
 print(Outer)
 
-
+# Get-ChildItem "$env:ProgramFiles\R", "$env:LOCALAPPDATA\Programs\R" -Recurse -Filter R.exe -ErrorAction SilentlyContinue | Where-Object FullName -like "*\bin\x64\*" | Select-Object -ExpandProperty FullName
 
 # ---- Exercise 2: Expectations, variances, correlation ---------------------
 # E[X]=3, E[Y]=2, Var(X)=5, Var(Y)=4, Cov(X,Y)=-2
