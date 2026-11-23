@@ -7,7 +7,9 @@
 # Packages used in the course so far -- add new ones here as tutorials need them
 pkgs <- c(
   "wooldridge",  # textbook datasets (ceosal2, wage1, ...)
-  "tidyverse"    # ggplot2, dplyr, readr, ...
+  "tidyverse",   # ggplot2, dplyr, readr, ...
+  "broom",       # tidy model results
+  "readxl"       # read Excel workbooks for the take-home assignment
 )
 
 options(repos = c(CRAN = "https://cloud.r-project.org"))  # fixed CRAN mirror, no prompt

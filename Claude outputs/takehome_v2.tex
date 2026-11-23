@@ -1,0 +1,241 @@
+\documentclass[12pt]{article}
+
+% --- Layout & language ---
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{csquotes}
+
+% --- Maths ---
+\usepackage{amsmath, amssymb, mathtools}
+
+% --- Tables & figures ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[table]{xcolor}
+\usepackage{subcaption}
+\captionsetup{font=it}
+\captionsetup[table]{position=top}
+
+% --- Code listings ---
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstset{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+% --- References (optional; remove if you don't cite) ---
+\usepackage[style=numeric, sorting=none, backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+% --- Links (hyperref before cleveref, as the last packages) ---
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black,
+            filecolor=black, urlcolor=black}
+\usepackage{cleveref}
+
+% --- Header/footer ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+
+\setlength\parindent{0pt}
+
+\title{Microeconometric Methods for Big Data\\ Take-Home Assignment}
+\author{Joep Seinen (Matriculation no.\ XXXXXXX)}
+\date{November 2026}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+For this take home assignment the paper; \enquote{Microcommitments: The Effect of Small Commitments on Student Success} by Felkey, Dziadula, Chiang and Vazquez (2021) \cite{felkey2021}, is discussed and partially replicated, the paper examines whether economic content delivered with commitment devices accompanied by social accountability can enhance student performance. The models used for to investigate this relationship are two OLS regressions of the relative exam score after the intervention on a treatment dummy for receiving microcommitments, a set of control variables and course-level fixed effects: the full specification of Table 2, Total (2) in \cref{eq:full}, and a short specification without the relative exam score before the intervention in \cref{eq:short}. 
+
+\section{Replication of Table 2 (2)}
+For the first OLS the relative exam score after the intervention (re\_after) in the dataset, is regressed on the treatment, the result before (re\_before) and the extra control variables derived from the appendix \cite{felkey2021appendix}. The formula given also includes the course level fixed effects; this is to control for a systematic effect which differences cannot be observed. The model then becomes:
+\begin{equation}
+\begin{aligned}
+\text{re\_after}_{ic} = {} & \alpha + \beta\,\text{Treatment}_{ic} + \theta\,\text{re\_before}_{ic} + \delta_1\,\text{priorecon}_{ic} + \delta_2\,\text{highperform}_{ic} \\
+& + \delta_3\,\text{required}_{ic} + \delta_4\,\text{highstudy}_{ic} + \delta_5\,\text{female}_{ic} + \delta_6\,\text{nonwhite}_{ic} \\
+& + \delta_7\,\text{onfinaid}_{ic} + \gamma_c + u_{ic},
+\end{aligned}
+\label{eq:full}
+\end{equation}
+where $i$ denotes the student, $c$ the course section ($c = 1,\dots,12$), $\gamma_c$ the section fixed effects (included as dummies, with section 1 as reference) and $u_{ic}$ the error term. The coefficient of interest is $\beta$.
+
+
+The results then become:
+
+\begin{table}[H]
+\centering
+\caption{Replication of Table 2, Total (2). Dependent variable: re\_after.}
+\label{tab:replication}
+\begin{tabular}{lcc}
+\toprule
+ & Replication & Paper \\
+\midrule
+Treatment (microcommitments) & 0.015** & 0.015** \\
+                             & (0.008) & (0.008) \\
+re\_before (exam before)     & 0.526*** & 0.526*** \\
+                             & (0.029) & (0.029) \\
+priorecon                    & $-0.003$ & $-0.003$ \\
+                             & (0.010) & (0.010) \\
+highperform                  & 0.042*** & 0.042*** \\
+                             & (0.010) & (0.010) \\
+required                     & $-0.029$*** & 0.029*** \\
+                             & (0.009) & (0.009) \\
+highstudy                    & $-0.004$ & $-0.004$ \\
+                             & (0.013) & (0.013) \\
+female                       & 0.0004 & 0.0004 \\
+                             & (0.008) & (0.008) \\
+nonwhite                     & $-0.002$ & $-0.002$ \\
+                             & (0.009) & (0.009) \\
+onfinaid                     & $-0.020$** & $-0.020$** \\
+                             & (0.008) & (0.008) \\
+\midrule
+Section fixed effects        & Yes & Yes \\
+Adjusted $R^2$               & 0.296 & 0.296 \\
+Observations                 & 1155 & 1155 \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+{\footnotesize Standard errors in parentheses. *, ** and *** denote significance at the 10\%, 5\% and 1\% level (stars as in the paper's online appendix). Coefficients of the 11 section dummies are not reported.}
+\end{table}
+
+\section{Dropping Exam Before: Omitted Variable Bias}
+
+For the second task in the take-home assignment the instruction is given to ommit one of the regressors; the re\_before (the result before the intervention). The new model then becomes
+\begin{equation}
+\begin{aligned}
+\text{re\_after}_{ic} = {} & \alpha + \beta\,\text{Treatment}_{ic} + \delta_1\,\text{priorecon}_{ic} + \delta_2\,\text{highperform}_{ic} + \delta_3\,\text{required}_{ic} \\
+& + \delta_4\,\text{highstudy}_{ic} + \delta_5\,\text{female}_{ic} + \delta_6\,\text{nonwhite}_{ic} + \delta_7\,\text{onfinaid}_{ic} + \gamma_c + v_{ic},
+\end{aligned}
+\label{eq:short}
+\end{equation}
+where the omitted regressor is now part of the error term, $v_{ic} = \theta\,\text{re\_before}_{ic} + u_{ic}$.
+
+\subsection{Discussion on the Results}
+
+The coefficietn of the treatment, $\hat{\beta}$ (standard error in parentheses), is gone from 0.015 (0.008) in \cref{eq:full} to 0.011 (0.009) in \cref{eq:short}, when ommiting the re\_before regressor we acknowledge the relationship between the exam result after intervention and the intervention to have a less positive effect. \\
+\begin{equation}
+\text{re\_before}_{ic} = \delta\,\text{Treatment}_{ic} + \text{(controls, FE)} + w_{ic}
+\label{eq:aux}
+\end{equation}
+\begin{equation}
+\hat{\beta}_{\text{short}} = \hat{\beta}_{\text{full}} + \hat{\theta}\,\hat{\delta}
+\qquad\Rightarrow\qquad
+0.011 \approx 0.015 + 0.526 \times (-0.008)
+\label{eq:ovb}
+\end{equation}
+\newline
+The reason for this could, be % TODO: write your reasons here (see feedback)
+It can be seen that $\hat{\theta}$ is significant; there is thus a significant effect of the performance on an earlier exam on the result of an exam now.  
+
+The $\hat{\delta}$ is insignificant, the effect of treatment is not significant on the result of a previous exam, which also makes sense considering the assignment of treatment was random. 
+
+The short estimator therefore still can be considered consistent; there is no systematic Omitted Variable Bias. The slight positive outcome of $\hat{\delta}$ is likely a result of the treatment group having worse results (given the same conditions and fixed effects (FE)). The SE increased quite a bit from 0.008 to 0.009, this shows that the loss of significance can be considered a precision issue rather than a bias issue.  \\
+\newline
+It can be seen that for the highperform regressor omitting the re_before variable does introduce omitted variable bias, the coefficient of the regressor spikes from 0.042 to 0.99. From the auxiliary regression it can be seen that highperform is positively related with the re_before variable. 
+
+\section{Conclusion}
+From the code in the appendix (\cref{app:code}, \cref{lst:rcode}), the following results were replicated:
+
+\begin{table}[H]
+\centering
+\caption{Main replicated results, Table 2, Total (2).}
+\label{tab:conclusion}
+\begin{tabular}{lcc}
+\toprule
+ & Replication & Paper \\
+\midrule
+Treatment (microcommitments) & 0.015** (0.008) & 0.015** (0.008) \\
+re\_before (exam before)     & 0.526*** (0.029) & 0.526*** (0.029) \\
+Adjusted $R^2$               & 0.296 & 0.296 \\
+Observations                 & 1155 & 1155 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+The results that is replicated and talked about in the paper is that the microcommitments have a small but significant effect on the (relative) result of the exam performance.\\
+\newline
+The dropping of the re_before variable does introduce no systematic OVB. It does change the outcome but is not correlated with the Treatment because of the random assignment that is done in the study.
+% we say in another part that variables that only real correlation is not discarded by the random assignment? or something? //
+\newline
+The dropping of re_before does affect the precision, the adjusted $R^2$ drops from 0.296 to 0.096
+\newline
+A contrast that can be seen is for the highperform variable, the coefficient changes significantly from 0.042 to 0.099, which tells us that re_before is correlated with highperform and shows us that both conditions (the omitted variable must affect the outcome, $\theta \neq 0$, and it must be correlated with the included regressor, $\delta \neq 0$) should be met for OVB.\\
+\newline
+Finally the inclusion of the re_before treatment is justified, its inclusion is not needed for the unbiasedness in the experiment but is needed to increase the precision of the coefficient of treatment. 
+
+
+
+\printbibliography
+
+\appendix
+\section{R code}
+\label{app:code}
+
+\begin{lstlisting}[language=R, caption={R code for the take-home assignment}, label={lst:rcode}]
+if (file.exists("R/00_setup.R")) source("R/00_setup.R") else source("00_setup.R")
+
+
+# R Code for the Take Home Assignment
+
+# read the data
+data_path <- "R/Data/felkey2021.xlsx"
+data <- readxl::read_excel(data_path)
+
+# check the data
+head(data)
+summary(data)
+
+# define our regression (OLS)
+library(wooldridge)
+OLS <- lm(re_after ~ Treatment + re_before + as.factor(sect), data = data) # we want different coefficients for the different sectors, so we include a factor variable for the sector
+
+
+summary(OLS)
+# we are specifically interested in the coefficient for the treatment variable;
+treatment_coefficient <- unname(round(coef(OLS)["Treatment"], 3))
+cat("The coefficient for the treatment variable is:", treatment_coefficient, "\n")
+
+# Now we add the controls from the Online Appendix
+OLSV2 <- lm(re_after ~ Treatment + re_before + priorecon + highperform + required + highstudy + female + nonwhite + onfinaid + as.factor(sect), data = data)
+
+summary(OLSV2)
+nobs(OLSV2)
+
+# The same as OLS2, but without re_before
+OLSV3 <- lm(re_after ~ Treatment + priorecon + highperform + required + highstudy + female + nonwhite + onfinaid + as.factor(sect), data = data)
+summary(OLSV3)
+nobs(OLSV3)
+
+# the auxilary regression (re_before on the controls)
+aux <- lm(re_before ~ Treatment + priorecon + highperform + required + highstudy + female + nonwhite + onfinaid + as.factor(sect), data = data
+)
+summary(aux)
+\end{lstlisting}
+
+\end{document}
