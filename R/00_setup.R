@@ -9,8 +9,11 @@ pkgs <- c(
   "wooldridge",  # textbook datasets (ceosal2, wage1, ...)
   "tidyverse",   # ggplot2, dplyr, readr, ...
   "broom",       # tidy model results
-  "readxl"       # read Excel workbooks for the take-home assignment
-)
+  "readxl",      # read Excel workbooks for the take-home assignment
+  "mlbench",     # for the tutorial on k-fold cross-validation
+  "glmnet",       # for the tutorial on k-fold cross-validation
+  "caret"
+  )
 
 options(repos = c(CRAN = "https://cloud.r-project.org"))  # fixed CRAN mirror, no prompt
 
