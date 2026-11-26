@@ -12,7 +12,9 @@ pkgs <- c(
   "readxl",      # read Excel workbooks for the take-home assignment
   "mlbench",     # for the tutorial on k-fold cross-validation
   "glmnet",       # for the tutorial on k-fold cross-validation
-  "caret"
+  "caret",
+  "rpart",       # for the tutorial on k-fold cross-validation
+  "rpart.plot"
   )
 
 options(repos = c(CRAN = "https://cloud.r-project.org"))  # fixed CRAN mirror, no prompt
